@@ -85,22 +85,5 @@ class LoginController extends Controller
 
    }
 
-   function actionTest()
-   {
-       $request     =   Yii::$app->request;
-       $uid = $request->get('uid');
-       $auth = new Auth();
-      // $auth_rule = AuthRules::find()->all();
-
-
-       $result = $auth->check("admin",$uid);
-       $response = Yii::$app->response;
-       $response->format = \yii\web\Response::FORMAT_JSON;
-       $response->data = ['message' => $result];
-
-
-   }
-
-
 
 }

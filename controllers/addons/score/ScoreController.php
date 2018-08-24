@@ -31,6 +31,7 @@ class ScoreController extends Controller
         $outScore  =   $request->post('outScore');
         $inviteScore    =   $request->post('inviteScore');
         $signInScore    =   $request->post('signInScore');
+        $inviteImage    =   $request->post('inviteImage');
         $id     =   $request->post('id');
 
         try{
@@ -45,10 +46,10 @@ class ScoreController extends Controller
             switch ($handle)
             {
                 case 'create':
-                    $result     =   $service->CreateScoreSet($inScore,$inPrice,$outScore,$outPrice,$uid,$signInScore,$inviteScore,$cauth_iden);
+                    $result     =   $service->CreateScoreSet($inScore,$inPrice,$outScore,$outPrice,$uid,$signInScore,$inviteScore,$inviteImage,$cauth_iden);
                     break;
                 case 'edit':
-                    $result     =   $service->EditScoreSet($id,$inScore,$inPrice,$outScore,$outPrice,$uid,$signInScore,$inviteScore,$cauth_iden);
+                    $result     =   $service->EditScoreSet($id,$inScore,$inPrice,$outScore,$outPrice,$uid,$signInScore,$inviteScore,$inviteImage,$cauth_iden);
                     break;
 
                 case 'disable':
@@ -73,6 +74,46 @@ class ScoreController extends Controller
 
     function actionInvite()
     {
+        /*
+         * 邀请好友
+         * uid 邀请人
+         * invite_uid 被邀请人
+         * handle create 创建一个邀请
+         * handle getInvite 有uid 与 inviteUid，代表邀请了一个人
+         *
+         * */
+        $request    =   Yii::$app->request;
+        $data['uid']    =   $request->post('uid');
+        $data['inviteUid']     =   $request->post('inviteUid'); //
+        $handle     =   $request->post('handle');
+        $data['cauth_iden']     =   $request->post('cauth_iden');
+
+        try{
+            $service    =   new Score();
+            switch($handle)
+            {
+                case 'create':
+                        $result     =   $service->createInvite($data);
+                    break;
+
+                case 'getInvite':
+                        $result     =   $service->getInvite($data);
+                    break;
+
+                default:
+
+                    $result     =   ['status'=>20013,'message'=>'邀请出错了'];
+
+                    break;
+            }
+            Utils::apiDisplay($result);
+        }catch(\Exception $e)
+        {
+            $result     =   ['message'=>$e->getMessage(),'status'=>$e->getCode()];
+            Utils::apiDisplay($result);
+        }
+
+
 
     }
 }
