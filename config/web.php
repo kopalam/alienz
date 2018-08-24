@@ -10,6 +10,8 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@plugins'=>'@app/plugins',
+//        '@uploads'=>'@uploads',
     ],
     'components' => [
         'request' => [
@@ -18,6 +20,10 @@ $config = [
             'enableCookieValidation' => false,//测试后删除
             'enableCsrfValidation' => false, //测试后删除
         ],
+        'plugins'=>[
+            'class'=>'app\config\PluginManager',
+        ],
+
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

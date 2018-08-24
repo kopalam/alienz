@@ -2,7 +2,8 @@
 
 	namespace app\services;
 	use app\models\admin\AdminUser;
-	use app\models\UserAuth;//权限规则表
+    use app\models\AuthRules;
+    use app\models\UserAuth;//权限规则表
 	use app\models\UserLogs;//用户组明细表
     use app\models\UserSet;//用户组数据表名
     use app\models\Users;
@@ -15,9 +16,9 @@
         protected $_config = array(
             'AUTH_ON' => true, //认证开关
             'AUTH_TYPE' => 1, // 认证方式，1为时时认证；2为登录认证。
-            'AUTH_GROUP' => 'app\models\UserSet', //用户组数据表名
-            'AUTH_MIDDLE' => 'app\models\UserLogs', //用户组明细表
-            'AUTH_RULE' => 'App\models\UserAuth', //权限规则表
+            'AUTH_GROUP' => 'app\models\ActivityVipSet', //用户组数据表名
+            'AUTH_MIDDLE' => 'app\models\ActivityVip;', //用户组明细表
+            'AUTH_RULE' => 'app\models\AuthRules;', //权限规则表
            // 'AUTH_USER' => 'think_members'//用户信息表
         );
         public function __construct()
@@ -58,12 +59,12 @@
                 return $groups[$uid];
 
             $Groups = new UserGroups();
-            $userGroups = $Groups->getUserGroups($uid,$this->_config['AUTH_MIDDLE'],$this->_config['AUTH_GROUP']);
+            $userGroups = $Groups->getUserGroups($uid);
             $groups[$uid]=$userGroups?$userGroups:array();
             return $groups[$uid];
         }
         //获得权限列表,不让外部访问
-        protected function getAuthList($uid) {
+        public function getAuthList($uid) {
             static $_authList = array();
             if (isset($_authList[$uid])) {
                return $_authList[$uid];
@@ -85,18 +86,14 @@
             //读取用户组所有权限规则
             //status=1 代表启用，0代表关闭
             $ids =  array_values($ids);
-            $map=array(
-                'id IN ({id:array}) AND status = 1',
-                'bind' => [
-                    'id' => $ids
-                ],
+            $map= ['IN','id',$ids];
                // 'status'=>0
-            );
+
             $rules = $this->getRules($map);
             //循环规则，判断结果。
             $authList = array();
             foreach ($rules as $r) {
-                if (!empty($r['condition'])) {
+                if (false) {
                     //条件验证
                     $user = $this->getUserInfo($uid);
                     $command = preg_replace('/\{(\w*?)\}/', '$user[\'\\1\']', $r['condition']);
@@ -129,7 +126,7 @@
         //根据条件获取规则
         public function getRules($map)
         {
-            $rules = AuthRules::find($map)->toArray();
+            $rules = AuthRules::find()->where($map)->all();  ;
             return $rules;
         }
 

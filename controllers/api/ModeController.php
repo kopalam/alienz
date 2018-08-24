@@ -16,6 +16,8 @@ use app\services\Auth;
 use app\models\UserAuth;
 use app\models\Sitemode;
 use app\services\admin\Adminajax;
+//use app\config\PluginManager;
+require_once '../config/PluginManager.php';
 
 
 class ModeController extends Controller
@@ -77,17 +79,20 @@ class ModeController extends Controller
 
     function actionSetredis()
     {
-        $uid    =   1;
-        $authGroup = [];
-        $auth = new Auth();
-        $rules = UserAuth::find()->asArray();
-//        print_r($rules);exit();
-        foreach ($rules as $rule){
-            if($auth->check($rule['name'],$uid))
-                $authGroup[] = $rule->name ;
-        }
-
-        print_r($authGroup);
+//        $uid    =   1;
+//        $authGroup = [];
+//        $auth = new Auth();
+//        $rules = UserAuth::find()->asArray();
+////        print_r($rules);exit();
+//        foreach ($rules as $rule){
+//            if($auth->check($rule['name'],$uid))
+//                $authGroup[] = $rule->name ;
+//        }
+//
+//        print_r($authGroup);
+        $basePath     =   Yii::getAlias("@plugins");
+        $pluginManager  =   new \PluginManager();
+        $pluginManager->trigger('demo','');
     }
 
 

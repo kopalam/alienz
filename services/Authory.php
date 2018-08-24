@@ -1,6 +1,6 @@
 <?php
 
-	namespace ass\services;
+	namespace app\services;
 	use app\services\Utils;
     use Yii;
 	
@@ -18,7 +18,7 @@
 
             $user  = Yii::$app->cache->get($this->token);
 
-            if( !$user )
+            if( !$this->token )
                 Utils::apiDisplay(["status" => 2,"message" => "用户未登录"]);
         }
 
