@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
-class ScoreSet extends ActiveRecord
+class UserScore extends ActiveRecord
 {
 
     public static function tableName(){

@@ -7,6 +7,7 @@
     use app\models\score\ScoreSet;//积分设置表
     use app\models\Users;
 	use app\models\Cauth;
+    use Yii;
 
 	// use Phalcon\Crypt; //加密类
 	Class Score{
@@ -85,17 +86,58 @@
            * uid 邀请人
            * inviteUid 被邀请人
            * */
-          $usrScoreData     =   $this->model.'score\UserScore';
+
+
           $inviteModel  =   $this->model.'score\InviteFriendLogs';
           $inviteData   =   $inviteModel::findOne(['uid'=>$data['uid'],'friend_uid'=>$data['inviteUid'],'cauth_iden'=>$data['cauth_iden']]);
-
           if($inviteData)
               throw new \Exception('已经邀请过了哦',20015);
-          $scoreSet     =   $this->model.'score\ScoreSet';
-          $inviteScore  =   $scoreSet::findOne(['cauth_iden'=>$data['cauth_iden']]);
-
+          $inviteScore  =   ScoreSet::findOne(['cauth_iden'=>$data['cauth_iden']]);
           if(!$inviteScore)
               throw new \Exception('获取积分设置失败',20014);
+
+          $transaction   =   Yii::$app->db->beginTransaction();
+          $userScoreData     =   $this->model.'score\UserScore';
+          $userScore    =   $userScoreData::findOne(['cauth_iden'=>$data['cauth_iden'],'uid'=>$data['uid']]);
+          $connection   =   Yii::$app->db;
+
+              //写入用户积分表userScore
+
+          $params = ['uid'=>$data['uid'],'cauth_iden'=>$data['cauth_iden'],'total_score'=>$inviteScore->invite_score];
+//          $param = ['uid'=>$data['inviteUid'],'cauth_iden'=>$data['cauth_iden'],'total_score'=>$inviteScore->invite_score];
+            $connection->createCommand()->upsert('user_score',$params,['total_score'=>new \yii\db\Expression('total_score + '.$inviteScore->invite_score)])->execute();
+//            $connection->createCommand()->upsert('user_score',$param,['total_score'=>new \yii\db\Expression('total_score + '.$inviteScore->invite_score)],$param)->execute();
+
+
+
+
+
+
+          //写入邀请记录表inviteFriendLogs
+          $inviteData->uid  =   $data['uid'];
+          $inviteData->friend_uid   =   $data['inviteUid'];
+          $inviteData->cauth_iden   =   $data['cauth_iden'];
+          $inviteData->invite_score =   $inviteScore->invite_score;
+          if($userScoreData->insert() == false){
+              $transaction->rollBack();
+              throw new \Exception('写入邀请记录表失败',20017);
+          }
+
+          //写入积分记录表scoreLogs
+          $scoreLogsData    =   $this->model.'score\Scorelogs';
+          $scoreLogs    =   new $scoreLogsData;
+          $scoreLogs->cauth_iden   =   $data['cauth_iden'];
+          $scoreLogs->uid  =   $data['uid'];
+          $scoreLogs->score     =   $inviteScore->invite_score;
+          $scoreLogs->types     =   'invite';//获得积分类型  invite 为邀请好友
+          $scoreLogs->dates     =   time();
+          if($scoreLogs->insert() == false){
+              $transaction->rollBack();
+              throw new \Exception('写入积分记录表失败',20018);
+          }
+          $transaction->commit();
+
+          return true;
 
 
 
