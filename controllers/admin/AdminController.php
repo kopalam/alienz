@@ -2,127 +2,59 @@
 
 namespace app\controllers\admin;
 
+use app\services\admin\Adminajax;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use app\services\Utils;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-
-class SiteController extends Controller
+use yii\rest\ActiveController;
+use app\models\admin;
+class AdminController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
+   /*
+    * 进入之前需要检测是否已经登录
+    *
+    * */
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
-        ];
-    }
+   function actionLoginhandle()
+   {
+       $request     =   Yii::$app->request;
+//       $name    =   $request->post('name');
+       $passwd  =   $request->post('passwd');
+       $telephone   =   $request->post('telephone');
+       $uid  =   $request->post('uid');
+       $handle  =   $request->post('handle');
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
+       try{
+           //使用password_hash加密密码
+           $service     =   new Adminajax();
+           switch ($handle)
+           {
+               case 'create':
+                   $passwd  =   password_hash($passwd,PASSWORD_DEFAULT);
+                   $result  =   $service->Create($telephone,$passwd);
+                   break;
+               case 'login':
+                   $result  =   $service->Login($telephone,$passwd);
+                   break;
+               case 'edit':
+                   $result  =   $service->Edit($uid,$telephone,$passwd);
+                   break;
+               default : $result    =   '出错了';
+               break;
+           }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+       }catch(\Exception $e){
+           $result['message']   =   $e->getMessage();
+           $result['code']  =   $e->getCode();
+           echo json_encode($result);exit();
+       }
+        Utils::apiDisplay($result);
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
+   }
 
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 }

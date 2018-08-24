@@ -23,7 +23,9 @@
         "phpoffice/phpspreadsheet": "^1.2",
         "vipsoft/unzip": "^1.2",
         "jjonline/aliyun-dysms-php-sdk": "^2.0",
-        "zacs/aliyun-dysms-msg-php-sdk": "^1.0"
+        "zacs/aliyun-dysms-msg-php-sdk": "^1.0",
+        "lcobucci/jwt": "^3.2",
+        "yiisoft/yii2-redis": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

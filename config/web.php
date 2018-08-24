@@ -10,15 +10,39 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@plugins'=>'@app/plugins',
+//        '@uploads'=>'@uploads',
     ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'K6oLETFPIH0OFudkHomLn6uPdDoCh5tH',
+            'enableCookieValidation' => false,//测试后删除
+            'enableCsrfValidation' => false, //测试后删除
         ],
+        'plugins'=>[
+            'class'=>'app\config\PluginManager',
+        ],
+
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'redis' =>[
+
+            'class' => 'yii\redis\Connection',
+
+            'hostname' => '127.0.0.1',  //你的redis地址
+
+            'port' => 6379, //端口
+
+            'database' => 0,
+
+        ],
+        'urlManager' => [
+            'showScriptName' => false,
+            'enablePrettyUrl' => true
+        ],
+
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
