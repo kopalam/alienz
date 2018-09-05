@@ -10,7 +10,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\models\score\UserScore;
 use app\models\Users;
 use app\models\ContactForm;
 use app\services\Utils;
@@ -62,6 +62,13 @@ class LoginController extends Controller
                    $user->reg_time = time();
                    if($user->insert()==false)
                        throw new \Exception('插入用户资料失败',1001);
+                   //将用户uid，cauth_iden,total_score写入user_score表
+                    $score  =   new UserScore();
+                    $score->cauth_iden  =   $cauthIden;
+                    $score->uid     =   $user->id;
+                    $score->total_score     =   0;
+                   if($score->insert()==false)
+                       throw new \Exception('更新积分记录失败',1001);
 
                    $result = ['user_id'=>$user->id,'openId'=>$user->openId,'unionId'=>$user->unionId];
                    break;
@@ -74,7 +81,8 @@ class LoginController extends Controller
            }
            //将token写入redis
            $result['token']     =   $getUserData['session3rd'];
-           $source  =   Yii::$app->redis->set($result['token'],json_encode($getUserData['sessionKey'].'='.$unionId));
+           Yii::$app->redis->set($result['token'],json_encode($getUserData['sessionKey'].'='.$unionId));
+
 
            Utils::apiDisplay($result);
        }catch(\Exception $e){
