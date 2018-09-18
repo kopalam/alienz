@@ -15,6 +15,7 @@ use Yii;
  * @property string $cover
  * @property int $start
  * @property int $price
+ * @property int $kid
  */
 class Course extends \yii\db\ActiveRecord
 {
@@ -32,8 +33,8 @@ class Course extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'status', 'content', 'teacher_id','price', 'cover', 'start'], 'required'],
-            [['status', 'teacher_id', 'start','price'], 'integer'],
+            [['name', 'status', 'content', 'teacher_id','price', 'cover', 'start','kid'], 'required'],
+            [['status', 'teacher_id', 'start','price','kid'], 'integer'],
             [['content', 'cover'], 'string'],
             [['name'], 'string', 'max' => 500],
         ];
@@ -57,6 +58,7 @@ class Course extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'kid'=>'Kid',
             'name' => 'Name',
             'status' => 'Status',
             'content' => 'Content',

@@ -25,7 +25,9 @@
         "jjonline/aliyun-dysms-php-sdk": "^2.0",
         "zacs/aliyun-dysms-msg-php-sdk": "^1.0",
         "lcobucci/jwt": "^3.2",
-        "yiisoft/yii2-redis": "^2.0"
+        "yiisoft/yii2-redis": "^2.0",
+        "dmstr/yii2-adminlte-asset": "2.*",
+        "mdmsoft/yii2-admin": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
