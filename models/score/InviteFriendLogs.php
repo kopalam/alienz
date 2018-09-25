@@ -20,7 +20,7 @@ class InviteFriendLogs extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'invite_friend_logs';
+        return 'invite_friend_log';
     }
 
     /**
@@ -29,7 +29,7 @@ class InviteFriendLogs extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'friend_uid', 'invite_score'], 'integer'],
+            [['uid', 'friend_uid', 'invite_score','status'], 'integer'],
             [['cauth_iden'], 'string', 'max' => 60],
         ];
     }
@@ -45,6 +45,7 @@ class InviteFriendLogs extends \yii\db\ActiveRecord
             'friend_uid' => 'Friend Uid',
             'invite_score' => 'Invite Score',
             'cauth_iden' => 'Cauth Iden',
+            'status' => 'Status',
         ];
     }
 }

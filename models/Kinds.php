@@ -18,21 +18,21 @@ class Kinds extends \yii\db\ActiveRecord
      */
 
 
-    const STATUS_ACTIVE = 0;
-    const STATUS_INACTIVE = 1;
-
-    const SCENARIO_INSERT = 'insert';
-    const SCENARIO_UPDATE = 'update';
-    const SCENARIO_ABLE = 'able';
-
-    public function scenarios()
-    {
-        return [
-            self::SCENARIO_INSERT => ['name', 'status'],
-            self::SCENARIO_UPDATE => ['name', 'status'],
-            self::SCENARIO_ABLE => ['status'],
-        ];
-    }
+//    const STATUS_ACTIVE = 0;
+//    const STATUS_INACTIVE = 1;
+//
+//    const SCENARIO_INSERT = 'insert';
+//    const SCENARIO_UPDATE = 'update';
+//    const SCENARIO_ABLE = 'able';
+//
+//    public function scenarios()
+//    {
+//        return [
+//            self::SCENARIO_INSERT => ['name', 'status'],
+//            self::SCENARIO_UPDATE => ['name', 'status'],
+//            self::SCENARIO_ABLE => ['status'],
+//        ];
+//    }
 
     public static function tableName()
     {

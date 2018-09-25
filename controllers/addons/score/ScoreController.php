@@ -84,7 +84,7 @@ class ScoreController extends Controller
          * */
         $request    =   Yii::$app->request;
         $data['uid']    =   $request->post('uid');
-        $data['inviteUid']     =   $request->post('inviteUid'); //
+        $data['inviteUid']     =   $request->post('inviteUid');
         $handle     =   $request->post('handle');
         $data['cauth_iden']     =   $request->post('cauth_iden');
 
@@ -112,7 +112,6 @@ class ScoreController extends Controller
             $result     =   ['message'=>$e->getMessage(),'status'=>$e->getCode()];
             Utils::apiDisplay($result);
         }
-
 
 
     }

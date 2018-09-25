@@ -12,6 +12,9 @@ use Yii;
  * @property int $course_id
  * @property int $stime
  * @property int $etime
+ * @property int $remark
+ * @property int $address
+ * @property int $classes
  */
 class CourseSet extends \yii\db\ActiveRecord
 {
@@ -29,8 +32,9 @@ class CourseSet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'course_id', 'stime', 'etime'], 'required'],
-            [['status', 'course_id', 'stime', 'etime'], 'integer'],
+            [['classes','status', 'course_id', 'stime', 'etime'], 'required'],
+            [['classes','status', 'course_id', 'stime', 'etime'], 'integer'],
+            [['remark','address'],'string'],
         ];
     }
 
@@ -50,6 +54,9 @@ class CourseSet extends \yii\db\ActiveRecord
             'course_id' => 'Course ID',
             'stime' => 'Stime',
             'etime' => 'Etime',
+            'remark'=>'Remark',
+            'address'=>'Address',
+            'classes'=>'Classes',
         ];
     }
 }

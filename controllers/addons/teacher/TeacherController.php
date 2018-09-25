@@ -4,7 +4,7 @@ namespace app\controllers\addons\kinds;
 
 use app\models\Article;
 use app\models\Kinds;
-use app\models\TeacherCourse;
+use app\models\bakTeacherCourse;
 use app\services\Auth;
 use app\services\test;
 use app\services\Utils;
@@ -46,7 +46,7 @@ class TeacherController extends Controller
             if (!$res)
                 throw new \Exception("您还不是老师！");
 
-            $courses = TeacherCourse::find()->where(['uid => '.$uid,'status'=>0])->asArray()->all();
+            $courses = bakTeacherCourse::find()->where(['uid => '.$uid,'status'=>0])->asArray()->all();
 
             $result['status'] = 0;
             $result['courses'] = $courses;

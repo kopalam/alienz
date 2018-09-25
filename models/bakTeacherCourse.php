@@ -8,12 +8,11 @@ use Yii;
  * This is the model class for table "teacher_course".
  *
  * @property int $id
- * @property int $kid
  * @property int $teacher_id
  * @property int $course_id
  * @property int $status
  */
-class TeacherCourse extends \yii\db\ActiveRecord
+class bakTeacherCourse extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -29,8 +28,8 @@ class TeacherCourse extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kid', 'teacher_id', 'course_id', 'status'], 'required'],
-            [['kid', 'teacher_id', 'course_id', 'status'], 'integer'],
+            [['teacher_id', 'course_id','kid', 'status'], 'required'],
+            [['teacher_id', 'course_id','kid', 'status'], 'integer'],
         ];
     }
 
@@ -41,9 +40,9 @@ class TeacherCourse extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'kid' => 'Kid',
             'teacher_id' => 'Teacher ID',
             'course_id' => 'Course ID',
+            'kid' => 'KID',
             'status' => 'Status',
         ];
     }

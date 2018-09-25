@@ -7,7 +7,9 @@ use app\models\Kinds;
 use app\services\Auth;
 use app\services\test;
 use app\services\Utils;
+use app\services\General;
 use Codeception\Lib\Connector\Yii2;
+use SebastianBergmann\CodeCoverage\Util;
 use yii\web\Controller;
 
 class KindsController extends Controller
@@ -16,20 +18,56 @@ class KindsController extends Controller
      * 展示所有分类
      * @throws \Throwable
      */
-    public function actionIndex()
-    {
-        $request = \Yii::$app->request;
-        $token = $request->post('token');
-        $kinds = Kinds::find()
-            ->select(['id','name','status'])
-            ->asArray()
-            ->all();
-        $result['status'] = 0;
-        $result['data'] = $kinds;
-        Utils::apiDisplay($result);
 
+    public function actionGetkinds()
+    {
+        /*
+         * 获取对应分类
+         * */
+        $request = \Yii::$app->request;
+//        $token = $request->post('token');
+        $service    =   new General();
+        $result     =   $service->kinds();
+        Utils::apiDisplay(['status'=>0,'data'=>$result]);
     }
 
+    public function actionKindshandle()
+    {
+        /*
+         * 分类编辑修改
+         * */
+        $request    =   \Yii::$app->request;
+        $token      =   $request->post('token');
+        $data['name']       =   $request->post('name');
+        $data['parent_id']     =   $request->post('parent_id');
+        $data['image']  =   $request->post('image');
+        $data['kid']     =   $request->post('kid');
+        $handle     =   $request->post('handle');
+        $data['route_id']   =    $request->post('route_id');
+        try{
+            $service    =   new General();
+            $disableId  =   empty($data['parent_id']) ? $data['kid'] : $data['parent_id'];
+            switch ($handle){
+                case 'create':
+                    $result     =   $service->kindsInsert($data);
+                    break;
+                case 'edit':
+                    $result     =   $service->kindsEdit($data);
+                    break;
+                case 'disable':
+                    $result     =   $service->kindsDisable($data['route_id']);
+                    break;
+                default:
+                    $result     =   ['status'=>1,'message'=>'出错了'];
+                    break;
+            }
+        }catch (\Exception $e){
+            $result['status'] = 1;
+            $result['message'] = $e->getMessage();
+            Utils::apiDisplay($result);
+        }
+        Utils::apiDisplay($result);
+    }
     public function actionKind()
     {
         $request = \Yii::$app->request;
@@ -43,47 +81,6 @@ class KindsController extends Controller
         Utils::apiDisplay($result);
     }
 
-    /**
-     * 新建分类
-     * @throws \Throwable
-     */
-    public function actionInsert()
-    {
-        $request = \Yii::$app->request;
-        $token = $request->post('token');
-        $uid = $request->post('uid');
-        try{
-            $auth = new Auth();
-            $res = $auth->check("admin",$uid);
-            if (!$res)
-                throw new \Exception("你没有编辑分类的权限！");
-
-            $values = [
-                'name' => $request->post('name'),
-                'status' => $request->post('status'),
-            ];
-            $kind = new Kinds(['scenario' => 'insert']);
-            $kind->attributes = $values;
-            if ($kind->validate()) {
-                // 所有输入数据都有效 all inputs are valid
-                if ($kind->save()==false)
-                    throw new \Exception("新增分类失败");
-            } else {
-                // 验证失败：$errors 是一个包含错误信息的数组
-                throw new \Exception("输入的信息有误");
-            }
-
-            //$data = ["message" => "新增文章成功"];
-            $result['status'] = 0;
-            $result['message'] = "新增分类成功";
-
-        }catch (\Exception $e){
-            $result['status'] = 1;
-            $result['message'] = $e->getMessage();
-            Utils::apiDisplay($result);
-        }
-        Utils::apiDisplay($result);
-    }
 
     /**
      * 更新文章
@@ -175,5 +172,7 @@ class KindsController extends Controller
         }
         Utils::apiDisplay($result);
     }
+
+
 
 }
