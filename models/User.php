@@ -18,9 +18,8 @@ use Yii;
  * @property string $avatarUrl
  * @property int $reg_time
  * @property string $unionId
- * @property string $telephone
- * @property string $cauth_iden
  * @property int $status
+ * @property string $telephone
  */
 class User extends \yii\db\ActiveRecord
 {
@@ -41,7 +40,7 @@ class User extends \yii\db\ActiveRecord
             [['openId', 'nickName'], 'required'],
             [['gender', 'reg_time', 'status'], 'integer'],
             [['openId', 'nickName'], 'string', 'max' => 33],
-            [['language', 'cauth_iden'], 'string', 'max' => 32],
+            [['language'], 'string', 'max' => 32],
             [['city', 'province', 'country', 'telephone'], 'string', 'max' => 20],
             [['avatarUrl'], 'string', 'max' => 355],
             [['unionId'], 'string', 'max' => 40],
@@ -65,9 +64,8 @@ class User extends \yii\db\ActiveRecord
             'avatarUrl' => 'Avatar Url',
             'reg_time' => 'Reg Time',
             'unionId' => 'Union ID',
-            'telephone' => 'Telephone',
-            'cauth_iden' => 'Cauth Iden',
             'status' => 'Status',
+            'telephone' => 'Telephone',
         ];
     }
 }

@@ -8,13 +8,16 @@
 
 namespace app\services;
 use app\models\admin\AdminUser;
+use app\models\Article;
 use \app\models\Kinds;
 use \app\models\KindsRoute;
 use \app\models\Course;
 use \app\models\CourseSet;
+use app\models\score\ScoreMark;
+use app\models\score\ScoreSet;
 use \app\models\TeacherCourse;
 use Yii;
-
+use Carbon\Carbon;
 class General
 {
 
@@ -85,9 +88,10 @@ class General
         $routeData  =   $kindsRouteModel::find()->where('status = 0')->asArray()->all();
         $result     =   [];
         foreach ($routeData as $key =>$value){
+            $kindsModel     =   $this->model.'Kinds';
+            $kindsData  =   $kindsModel::findOne($value['kid']);
             if($value['parent_id'] == 0){
-                $kindsModel     =   $this->model.'Kinds';
-                $kindsData  =   $kindsModel::findOne($value['kid']);
+
                 $result[$key]['route_id']       =   $value['id'];
                 $result[$key]['kid']    =   $kindsData->id;
                 $result[$key]['kinds']  =   $kindsData->name;
@@ -95,8 +99,6 @@ class General
                 $result[$key]['parent']     =   0;
                 $result[$key]['status']     =   $kindsData['status'];
             }else{
-                $kindsModel     =   $this->model.'Kinds';
-                $kindsData  =   $kindsModel::findOne($value['kid']);
                 $kindParent     =   $kindsModel::findOne($value['parent_id']);
                 $result[$key]['route_id']       =   $value['id'];
                 $result[$key]['parent_id']    =  $value['parent_id'];
@@ -206,8 +208,22 @@ class General
     {
         /*
          * 查询分类下的对应文章
+         * kid 分类id
          * */
+        $article    =   Article::find()->where(['kind_id'=>$kid,'status'=>0])->asArray()->all();
+        $result     =   [];
+        if(empty($article))
+            throw new \Exception('该分类下还没有文章哦',1);
 
+        foreach ($article as $key =>$value) {
+            $result[$key]['id']     =   $value['id'];
+            $result[$key]['title']     =   $value['title'];
+            $result[$key]['content']     =   $value['content'];
+            $result[$key]['kind_id']     =   $value['kind_id'];
+            $result[$key]['cover']     =   $value['cover'];
+            $result[$key]['dates']     =   date('Y-d-d H:i:s',$value['dates']);
+        }
+        return $result;
 
     }
 
@@ -317,6 +333,9 @@ class General
 
     public function courseList($kid,$page)
     {
+        /*
+         * 分类下的课程列表
+         * */
         if(empty($page))
             $page     =   1;
 
@@ -325,6 +344,42 @@ class General
 
         $course   =   Course::find()
             ->where(['status'=>0,'kid'=>$kid])
+            ->limit($size)
+            ->offset($skip)
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
+
+        $result     =   [];
+        foreach ($course as $k =>$val)
+        {
+            $result[$k]['cover']      =   $val['cover'];
+            $result[$k]['courseName']   =   $val['name'];
+            $result[$k]['course_id']   =   $val['id'];
+            $result[$k]['start']    =   $val['start'];
+            $result[$k]['price']    =   $val['price']/100;
+            $result[$k]['status']    =   $val['status'];
+            $teacher    =   AdminUser::findOne($val['teacher_id']);
+            if (!$teacher)
+                throw new \Exception("寻找不到课程计划");
+            $result[$k]['teacherName']  =   $teacher->name;
+        }
+        return $result;
+    }
+
+    public function cList($page)
+    {
+        /*
+         * 所有课程
+         * */
+        if(empty($page))
+            $page     =   1;
+
+        $size = 8;//一次读取20条信息
+        $skip = (intval($page)-1)*$size;
+
+        $course   =   Course::find()
+            ->where(['status'=>0])
             ->limit($size)
             ->offset($skip)
             ->orderBy('id desc')
@@ -359,10 +414,14 @@ class General
         $course = $course->toArray();
         $course['price']    =   $course['price']/100;
 
+
+
         $course_set = CourseSet::findOne(['course_id'=>$course_id]);
         if (!$course_set)
             throw new \Exception("寻找不到课程计划");
         $course_set = $course_set->toArray();
+        $course_set['stime']    =   date('Y-m-d H:i:s',$course_set['stime']);
+        $course_set['etime']    =   date('Y-m-d H:i:s',$course_set['etime']);
         $teacher    =   TeacherCourse::findOne(['course_id'=>$course_id]);
         if (!$teacher)
             throw new \Exception("寻找不到关联老师");
@@ -377,5 +436,36 @@ class General
 
         return $result;
     }
+
+    public function mark($uid)
+    {
+        /*
+         * 设计理念
+         * 读取 score_set中的sigin_in_score进行递增
+         * 先检测表中当前时间的yesterday是否存在，是否已经打卡，如果已经打卡
+         * 例如：sigin_in_score == 2，首次签到1个积分，第二天2+2，第三天3+2，第四天4+2，第五天5+2如此类推
+         * 利用事物同步更新到 user_logs user_score中
+         * */
+
+        $scoreSet   =   ScoreSet::findOne(1);
+        $defaultScore    =  1;//默认第一次签到为1积分
+        $userMark   =   ScoreMark::find()->where(['uid'=>$uid])->orderBy('id')->asArray()->one();
+        if(!$userMark)
+        {
+            $mark   =   new ScoreMark();
+            $mark->uid  =   $uid;
+            $mark->last_sign_time   =   time();
+            $mark->total_day    =   1;
+            if($userMark->save()==false)
+                throw new \Exception('签到失败',1);
+        }
+
+
+
+
+
+
+    }
+
 
 }

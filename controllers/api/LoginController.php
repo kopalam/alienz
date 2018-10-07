@@ -11,7 +11,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\score\UserScore;
-use app\models\Users;
+use app\models\User;
 use app\models\ContactForm;
 use app\services\Utils;
 use app\services\mini\WXLoginHelper;
@@ -38,18 +38,17 @@ class LoginController extends Controller
        try{
             $service    =   new WXLoginHelper();
            $getUserData   =   $service->checkLogin($code, $rawData, $signature, $encryptedData,$iv,$cauthIden);
-
            if(isset($result->code))
                Utils::apiDisplay($getUserData);
 
            $openId  =   $getUserData['openId'];
            $unionId =   isset($getUserData['unionId']) ? $getUserData['unionId']:0;
            $paramers    =   $unionId !==0 ? ['unionId'=>$unionId]:['openId'=>$openId];
-           $hasUser     =   Users::findOne($paramers);//查找表中是否有该用户
+           $hasUser     =   User::findOne($paramers);//查找表中是否有该用户
            $info    =   isset($hasUser->openId)?1:0; //存在openid，则代表有数据,1为有数据，0为空
            switch ($info){
                case 0:
-                   $user    =   new Users;
+                   $user    =   new User;
                    $user->openId = $getUserData['openId'];
                    $user->unionId = $getUserData['openId;unionId'];
                    $user->nickName = preg_replace('/[\x{10000}-\x{10FFFF}]/u','',$getUserData['nickName']);

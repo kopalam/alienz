@@ -24,7 +24,7 @@ class CourseController extends Controller
         // 必要配置
         'app_id'             => 'xxxx',
         'mch_id'             => 'your-mch-id',
-        'key'                => 'key-for-signature',   // API 密钥
+        'key'                => 'qwertyuiopzxcvbnmasdfghjkl123456',   // API 密钥
 
         // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
         'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
@@ -236,6 +236,7 @@ class CourseController extends Controller
             $json = $jssdk->bridgeConfig($payResult['prepay_id'],false);
             $result['status'] = 0;
             $result['pay'] = $json;
+            $result['trade_sn']     =   $trade_sn;
         }catch (\Exception $e){
             $result['status'] = 1;
             $result['message'] = $e->getMessage();

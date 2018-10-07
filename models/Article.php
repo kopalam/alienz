@@ -13,6 +13,7 @@ use Yii;
  * @property int $dates
  * @property int $kind_id
  * @property int $status
+ * @property string $cover
  */
 class Article extends \yii\db\ActiveRecord
 {
@@ -30,8 +31,8 @@ class Article extends \yii\db\ActiveRecord
     public function scenarios()
     {
         return [
-            self::SCENARIO_INSERT => ['title', 'content','dates','kind_id','status'],
-            self::SCENARIO_UPDATE => ['title', 'content','dates','kind_id','status'],
+            self::SCENARIO_INSERT => ['title', 'content','dates','kind_id','cover','status'],
+            self::SCENARIO_UPDATE => ['title', 'content','dates','kind_id','cover','status'],
             self::SCENARIO_ABLE => ['status'],
         ];
     }
@@ -48,7 +49,7 @@ class Article extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'content', 'kind_id', 'status'], 'required'],
-            [['content'], 'string'],
+            [['content','cover'], 'string'],
             [['dates', 'kind_id', 'status'], 'integer'],
             [['title'], 'string', 'max' => 500],
         ];
@@ -66,6 +67,7 @@ class Article extends \yii\db\ActiveRecord
             'dates' => 'Dates',
             'kind_id' => 'Kind ID',
             'status' => 'Status',
+            'cover'=>'Cover',
         ];
     }
 }

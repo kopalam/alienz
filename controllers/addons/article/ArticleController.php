@@ -25,7 +25,7 @@ class ArticleController extends Controller
         $data['kid']  = $request->post('kid');
         try{
             $service    =   new General();
-            $articleList    =   $service->articleList($data['kid']);
+            $result    =   $service->articleList($data['kid']);
         }catch (\Exception $e){
             $result['status'] = 1;
             $result['message'] = $e->getMessage();
