@@ -139,6 +139,9 @@ class CourseController extends Controller
 
     public function actionList()
     {
+        /*
+         * 分类下的课程列表
+         * */
         $request = Yii::$app->request;
         $token = $request->post('token');
         $page   =   $request->post('page');
@@ -154,6 +157,22 @@ class CourseController extends Controller
         }
 
     }
+
+    public function actionCourselist()
+    {
+        /*
+         * 课程列表
+         * 读取所有课程明细
+         * */
+        $request    =   Yii::$app->request;
+        $page   =   $request->post('page');
+
+        $service    =   new General();
+        $result     =   $service->cList($page);
+
+        Utils::apiDisplay(['status'=>0,'data'=>$result]);
+    }
+
 
 
 }

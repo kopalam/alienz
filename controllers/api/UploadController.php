@@ -16,9 +16,12 @@ class UploadController extends Controller
     public function actionUploadimg()
     {
         try{
+            if(empty($_FILES))
+                exit('出错了');
+
             $upload = new Upload();
             $info   =   $upload->getImage();
-            $imgUrl     =   '/web/uploads'.$info['dirName'].'/'.$info['fileName'];
+            $imgUrl     =   '/uploads'.$info['dirName'].'/'.$info['fileName'];
             Utils::apiDisplay(['status'=>0,'data'=>$imgUrl]);
         }catch(Exception $e){
             $data['status']  = 1;
@@ -26,4 +29,6 @@ class UploadController extends Controller
             Utils::apiDisplay( $data );
         }
     }
+
+
 }

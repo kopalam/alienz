@@ -27,7 +27,9 @@
         "lcobucci/jwt": "^3.2",
         "yiisoft/yii2-redis": "^2.0",
         "dmstr/yii2-adminlte-asset": "2.*",
-        "mdmsoft/yii2-admin": "~2.0"
+        "mdmsoft/yii2-admin": "~2.0",
+        "nesbot/carbon": "^1.32",
+        "overtrue/wechat": "~4.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
