@@ -204,13 +204,24 @@ class General
     }
 
 
-    public function articleList($kid)
+    public function articleList($kid,$page)
     {
         /*
          * 查询分类下的对应文章
          * kid 分类id
          * */
-        $article    =   Article::find()->where(['kind_id'=>$kid,'status'=>0])->asArray()->all();
+        if(empty($page))
+            $page     =   1;
+
+        $size = 8;//一次读取20条信息
+        $skip = (intval($page)-1)*$size;
+
+        $article    =   Article::find()
+                                    ->where(['kind_id'=>$kid,'status'=>0])
+                                    ->limit($size)
+                                    ->offset($skip)
+                                    ->orderBy('id desc')
+                                    ->asArray()->all();
         $result     =   [];
         if(empty($article))
             throw new \Exception('该分类下还没有文章哦',1);
@@ -237,6 +248,9 @@ class General
            * 查找老师 admin_user
            * */
 
+        $checkKid   =   Kinds::find()->where(['id'=>$data['kid']])->asArray()->one();
+        if(!$checkKid)
+            throw new \Exception('不存在该分类',1);
         $transaction = Yii::$app->db->beginTransaction();
         $course     =   new Course();
         $course->name   =   $data['name'];
@@ -245,6 +259,7 @@ class General
         $course->cover   =   $data['cover'];
         $course->start   =   $data['start'];
         $course->price   =  $data['price'];
+        $course->kid   =  $data['kid'];
         $course->status  =   0;
         if($course->insert() == false)
         {
