@@ -96,16 +96,17 @@ class ArticleController extends Controller
         $token = $request->post('token');
         $uid = $request->post('uid');
         try{
-            $auth = new Auth();
-            $res = $auth->check("admin",$uid);
-            if (!$res)
-                throw new \Exception("你没有发表文章的权限！");
+//            $auth = new Auth();
+//            $res = $auth->check("admin",$uid);
+//            if (!$res)
+//                throw new \Exception("你没有发表文章的权限！");
 
             $values = [
                 'title' => $request->post('title'),
                 'content' => $request->post('content'),
                 'dates' => time(),
                 'kind_id' => $request->post('kind_id'),
+                'cover' => $request->post('cover'),
                 'status'=>$request->post('status'),
             ];
             $article = new Article(['scenario' => 'insert']);
@@ -142,16 +143,17 @@ class ArticleController extends Controller
         $token = $request->post('token');
         $uid = $request->post('uid');
         try{
-            $auth = new Auth();
-            $res = $auth->check("admin",$uid);
-            if (!$res)
-                throw new \Exception("你没有修改文章的权限！");
+//            $auth = new Auth();
+//            $res = $auth->check("admin",$uid);
+//            if (!$res)
+//                throw new \Exception("你没有修改文章的权限！");
 
             $article = Article::findOne($request->post('id'));
             $article->scenario = 'update';
             $values = [
                 'title' => $request->post('title'),
                 'content' => $request->post('content'),
+                'cover' => $request->post('cover'),
                 'dates' => time(),
                 'kind_id' => $request->post('kind_id'),
                 'status'=>$request->post('status'),
@@ -191,10 +193,10 @@ class ArticleController extends Controller
         $token = $request->post('token');
         $uid = $request->post('uid');
         try{
-            $auth = new Auth();
-            $res = $auth->check("admin",$uid);
-            if (!$res)
-                throw new \Exception("你没有修改文章的权限！");
+//            $auth = new Auth();
+//            $res = $auth->check("admin",$uid);
+//            if (!$res)
+//                throw new \Exception("你没有修改文章的权限！");
 
             $article = Article::findOne($request->post('id'));
             $article->scenario = 'able';
