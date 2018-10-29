@@ -15,10 +15,7 @@ use Yii;
  * @property int $dates
  * @property int $status
  * @property int $kinds
-<<<<<<< HEAD
  * @property string $type
-=======
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
  */
 class ScoreLog extends \yii\db\ActiveRecord
 {

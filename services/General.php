@@ -215,7 +215,6 @@ class General
 
         $size = 8;//一次读取20条信息
         $skip = (intval($page)-1)*$size;
-<<<<<<< HEAD
         if(!empty($kid)){
             $article    =   Article::find()
                 ->where(['kind_id'=>$kid,'status'=>0])
@@ -232,15 +231,6 @@ class General
                 ->asArray()->all();
         }
 
-=======
-
-        $article    =   Article::find()
-                                    ->where(['kind_id'=>$kid,'status'=>0])
-                                    ->limit($size)
-                                    ->offset($skip)
-                                    ->orderBy('id desc')
-                                    ->asArray()->all();
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
         $result     =   [];
         if(empty($article))
             throw new \Exception('该分类下还没有文章哦',1);
@@ -250,13 +240,9 @@ class General
             $result[$key]['title']     =   $value['title'];
             $result[$key]['content']     =   $value['content'];
             $result[$key]['kind_id']     =   $value['kind_id'];
-<<<<<<< HEAD
             $result[$key]['kind_name']  =   Kinds::findOne($value['kind_id'])->name;
             $result[$key]['cover']     =   $value['cover'];
             $result[$key]['status']     =   $value['status'];
-=======
-            $result[$key]['cover']     =   $value['cover'];
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
             $result[$key]['dates']     =   date('Y-d-d H:i:s',$value['dates']);
         }
         return $result;
@@ -286,11 +272,7 @@ class General
         $course->price   =  $data['price'];
         $course->kid   =  $data['kid'];
         $course->status  =   0;
-<<<<<<< HEAD
         if($course->save() == false)
-=======
-        if($course->insert() == false)
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
         {
             $transaction->rollBack();
             throw new \Exception('写入课程表失败',1);
@@ -440,13 +422,8 @@ class General
             $result[$k]['price']    =   $val['price']/100;
             $result[$k]['status']    =   $val['status'];
             $teacher    =   AdminUser::findOne($val['teacher_id']);
-<<<<<<< HEAD
 //            if (!$teacher)
 //                throw new \Exception("寻找不到课程计划",1);
-=======
-            if (!$teacher)
-                throw new \Exception("寻找不到课程计划");
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
             $result[$k]['teacherName']  =   $teacher->name;
         }
         return $result;

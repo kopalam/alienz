@@ -92,10 +92,7 @@ class CourseController extends Controller
         $data['classes'] =   $request->post('classes');
         $data['course_id']  =   $request->post('course_id');
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
         try{
             $data['price'] =    !empty($data['price']) ?  $data['price']*100 : 0 ;
             $service    =   new General();
@@ -111,11 +108,7 @@ class CourseController extends Controller
                     $result     = $service->disable('Course',$data['course_id']);
                     break;
                 default:
-<<<<<<< HEAD
                     $result =   ['status'=>1,'message'=>$handle];
-=======
-                    $result =   ['status'=>1,'message'=>'出错了'];
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
                     break;
             }
             Utils::apiDisplay(['status'=>0,'data'=>$result]);

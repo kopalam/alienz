@@ -23,26 +23,16 @@ class ArticleController extends Controller
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $data['kid']  = $request->post('kid');
-<<<<<<< HEAD
         $data['page']  = $request->post('page');
         try{
             $service    =   new General();
             $result    =   $service->articleList($data['kid'],$data['page']);
-=======
-        try{
-            $service    =   new General();
-            $result    =   $service->articleList($data['kid']);
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
         }catch (\Exception $e){
             $result['status'] = 1;
             $result['message'] = $e->getMessage();
             Utils::apiDisplay($result);
         }
-<<<<<<< HEAD
         Utils::apiDisplay(['status'=>0,'data'=>$result]);
-=======
-        Utils::apiDisplay($result);
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
 
     }
 

@@ -21,14 +21,7 @@
             'AUTH_RULE' => 'app\models\AuthRules;', //权限规则表
            // 'AUTH_USER' => 'think_members'//用户信息表
         );
-<<<<<<< HEAD
 
-=======
-        public function __construct()
-        {
-
-        }
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
 
         //获得权限$name 可以是字符串或数组或逗号分割， uid为 认证的用户id， $or 是否为or关系，为true是， name为数组，只要数组中有一个条件通过则通过，如果为false需要全部条件通过。
         public function check($name, $uid,$relation='or') {

@@ -8,17 +8,13 @@
 
 namespace app\services\admin;
 use app\models\admin\AdminUser;
-<<<<<<< HEAD
 use app\services\Auth;
-=======
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
 
 class Adminajax
 {
     private $request;
     private $response;
 
-<<<<<<< HEAD
     function Login($name,$passwd)
     {
         $result     =  AdminUser::find()->where(['name'=>$name])->asArray()->one();
@@ -33,15 +29,6 @@ class Adminajax
         $auth   =   new Auth();
         $result['auth'] =   $auth->check('管理员,导师,付费学员,普通会员',$result['id']);
         echo json_encode($result);exit();
-=======
-    function Login($telephone,$passwd)
-    {
-        $result     =  AdminUser::findOne(['telephone'=>$telephone]);
-        if(!$result)
-            throw new \Exception('不存在该用户',10002);
-
-        $result  =   !(password_verify($passwd,$result->passwd)) ? 0 :1;
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
         return $result;
     }
 

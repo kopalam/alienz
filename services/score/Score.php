@@ -105,10 +105,7 @@
               $friendInsert->friend_uid   =   $data['inviteUid'];
               $friendInsert->invite_score     =   $scoreSet->invite_score;
               $friendInsert->cauth_iden   =   $data['cauth_iden'];
-<<<<<<< HEAD
               $friendInsert->dates  =   time();
-=======
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
               if($friendInsert->save()==false){
                   $transaction->rollBack();
                   throw new \Exception('写入邀请好友表失败',1);
@@ -161,11 +158,7 @@
           }
 
               $transaction->commit();
-<<<<<<< HEAD
             return ['message'=>'成功获得邀请积分啦!','data'=>true];
-=======
-            return true;
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
       }
 
       function inviteList($page)
@@ -202,11 +195,8 @@
               $result[$key]['friend_uid'] = $value['friend_uid'];
               $result[$key]['friend']   =  $friend['nickName'];
               $result[$key]['invite_score']  =   $value['invite_score'];
-<<<<<<< HEAD
               $result[$key]['types']  =   '邀请好友';
               $result[$key]['dates']    =   date('Y-m-d',$value['dates']);
-=======
->>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
               $result[$key]['status']  =   $value['status'];
           }
           return $result;
