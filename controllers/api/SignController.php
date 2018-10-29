@@ -32,7 +32,11 @@ class SignController extends Controller
         $yesterday_start =mktime(0, 0, 0, date('m'), $yesterday, date('Y'));
         $yesterday_end =mktime(23, 59, 59, date('m'), $yesterday, date('Y'));
         try{
+<<<<<<< HEAD
             $cond = ['and',"type='mark'", 'status=0',"uid='$uid'","cauth_iden='$cauth_iden'"] ;
+=======
+            $cond = ['and',"type='sign'", 'status=0',"uid='$uid'","cauth_iden='$cauth_iden'"] ;
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
             $score_log = ScoreLog::find()->where($cond)->orderBy('dates desc')->one();
             $sign_set = SignSet::findOne(1);
             if($score_log){
@@ -62,7 +66,11 @@ class SignController extends Controller
                 $sign = new ScoreLog();
                 $sign->cauth_iden = $cauth_iden;
                 $sign->uid = $uid;
+<<<<<<< HEAD
                 $sign->type = 'mark';
+=======
+                $sign->type = 'sign';
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
                 $sign->dates = $timestamp;
                 $sign->status = 0;
                 $sign->kinds = 0;
@@ -82,6 +90,7 @@ class SignController extends Controller
         }
         Utils::apiDisplay($result);
     }
+<<<<<<< HEAD
 
     public function actionSignlist()
     {
@@ -146,4 +155,6 @@ class SignController extends Controller
         Utils::apiDisplay($res); ;
     }
 
+=======
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
 }

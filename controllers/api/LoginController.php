@@ -4,7 +4,10 @@ namespace app\controllers\api;
 
 use app\models\AuthRules;
 use app\models\UserAuth;
+<<<<<<< HEAD
 use app\services\admin\Adminajax;
+=======
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
 use app\services\Auth;
 use Yii;
 use yii\filters\AccessControl;
@@ -94,5 +97,8 @@ class LoginController extends Controller
    }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
 }

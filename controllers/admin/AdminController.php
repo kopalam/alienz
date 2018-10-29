@@ -29,7 +29,11 @@ class AdminController extends Controller
        $request     =   Yii::$app->request;
 //       $name    =   $request->post('name');
        $passwd  =   $request->post('passwd');
+<<<<<<< HEAD
        $name   =   $request->post('name');
+=======
+       $telephone   =   $request->post('telephone');
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
        $uid  =   $request->post('uid');
        $handle  =   $request->post('handle');
 
@@ -40,6 +44,7 @@ class AdminController extends Controller
            {
                case 'create':
                    $passwd  =   password_hash($passwd,PASSWORD_DEFAULT);
+<<<<<<< HEAD
                    $result  =   $service->Create($name,$passwd);
                    break;
                case 'login':
@@ -49,6 +54,17 @@ class AdminController extends Controller
                    $result  =   $service->Edit($uid,$name,$passwd);
                    break;
                default : $result    =   ['status'=>1,'message'=>$handle];
+=======
+                   $result  =   $service->Create($telephone,$passwd);
+                   break;
+               case 'login':
+                   $result  =   $service->Login($telephone,$passwd);
+                   break;
+               case 'edit':
+                   $result  =   $service->Edit($uid,$telephone,$passwd);
+                   break;
+               default : $result    =   '出错了';
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
                break;
            }
 
@@ -125,7 +141,10 @@ class AdminController extends Controller
        $page    =   $request->post('page');
 //       $auth = new Authory($token);
 //       $auth->loggingVerify();
+<<<<<<< HEAD
        $result =[];
+=======
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
        try{
            $service     =   new Score();
            switch ($handle)
@@ -140,8 +159,12 @@ class AdminController extends Controller
 
                    break;
                default:
+<<<<<<< HEAD
 //                   $result  =   ['status'=>1,'message'=>'出错了'];
                    throw new \Exception('出错了',1);
+=======
+                   $result  =   ['status'=>1,'message'=>'出错了'];
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
                 break;
            }
        }catch (\Exception $e){
@@ -149,6 +172,7 @@ class AdminController extends Controller
            $result['code']  =   $e->getCode();
            echo json_encode($result);exit();
        }
+<<<<<<< HEAD
         Utils::apiDisplay(['status'=>0,'data'=>$result]);
    }
 
@@ -213,6 +237,61 @@ class AdminController extends Controller
            $result[$key]['teacher_id']     =   $value['id'];
        }
        Utils::apiDisplay(['status'=>0,'data'=>$result]);
+=======
+        Utils::apiDisplay($result);
+   }
+
+   function actionArticlehandle()
+   {
+       /*
+        * 文章控制器
+        * handle    list kid edit create disable
+        * articleId 文章id
+        * kid 分类id
+        * page 分页
+        * */
+       $request     =   Yii::$app->request;
+       $handle  =   $request->post('handle');
+       $uid     =   $request->post('uid');
+       $page    =   $request->post('page');
+       $articleId   =   $request->post('article_id');
+       $kid     =   $request->post('kid');
+
+       try{
+           $service     =   new General();
+           switch ($handle)
+           {
+
+               case 'kid':
+                   $result  =   $service->articleList($kid,$page);
+                   break;
+
+               case 'edit':
+                   $result  =   $service->articleEdit($page);
+                   break;
+
+               case 'create':
+                   $result  =   $service->articleCreate($page);
+                   break;
+
+               case 'disable':
+                   $result  =   $service->articleDisable($page);
+                   break;
+           }
+       }catch (\Exception $e){
+           $result['message']   =   $e->getMessage();
+           $result['code']  =   $e->getCode();
+           echo json_encode($result);exit();
+       }
+
+   }
+
+   function actionGetkid()
+   {
+       /*
+        * 获取分类
+        * */
+>>>>>>> 0412f7d675ad9361ea1f7d65cd3dd3f7d45b664d
    }
 
 }
