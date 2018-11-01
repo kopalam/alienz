@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $uid
- * @property string $vip
+ * @property int $vip
  * @property int $vip_id
  * @property int $vip_stime
  * @property int $vip_etime
@@ -31,9 +31,8 @@ class ActivityVip extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['uid', 'vip_id', 'vip_stime', 'vip_etime', 'status'], 'integer'],
+            [['uid', 'vip', 'vip_id', 'vip_stime', 'vip_etime', 'status'], 'integer'],
             [['vip_stime'], 'required'],
-            [['vip'], 'string', 'max' => 33],
         ];
     }
 

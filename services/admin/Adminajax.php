@@ -7,17 +7,20 @@
  */
 
 namespace app\services\admin;
+use app\models\ActivityVip;
+use app\models\ActivityVipSet;
 use app\models\admin\AdminUser;
 use app\services\Auth;
+use Yii;
 
 class Adminajax
 {
     private $request;
     private $response;
 
-    function Login($name,$passwd)
+    function Login($telephone,$passwd)
     {
-        $result     =  AdminUser::find()->where(['name'=>$name])->asArray()->one();
+        $result     =  AdminUser::find()->where(['telephone'=>$telephone])->asArray()->one();
         if(!$result)
             throw new \Exception('不存在该用户',10002);
 
@@ -32,19 +35,42 @@ class Adminajax
         return $result;
     }
 
-    function Create($telephone,$passwd)
+    function Create($name,$passwd,$telephone,$auth)
     {
-        $result     =  AdminUser::findOne(['telephone'=>$telephone]);
-        if($result)
+        /*
+         * 创建用户的同时，把用户uid写入activity_vip表
+         * */
+        $transaction = Yii::$app->db->beginTransaction();
+        $result     =  AdminUser::find()->where(['telephone'=>$telephone])->asArray()->one();
+        if(!empty($result['telephone']))
             throw new \Exception('电话号码已存在',10003);
         $data   =   new AdminUser();
         $data->telephone     =   $telephone;
+        $data->name     =   $name;
         $data->passwd   =   $passwd;
-        if($data->insert() == false)
-            throw new \Exception('注册用户失败',10001);
+        if($data->insert() == false){
 
-        $result =   ['status'=>true,'uid'=>$data->id];
-        return $result;
+            $transaction->rollBack();
+            throw new \Exception('注册用户失败',10001);
+        }
+//        echo ActivityVipSet::findOne($auth)->name;exit();
+
+        //写入activity_vip表
+        $setVip     =   new ActivityVip();
+        $setVip->uid    =   $data->id;
+        $setVip->vip_id     =   $auth;
+        $setVip->vip    =   ActivityVipSet::findOne($auth)->name;
+        $setVip->status     =   0;
+        $setVip->vip_stime    =   time();
+        $setVip->vip_etime    =   0;
+        if($setVip->insert() == false){
+            $transaction->rollBack();
+            throw new \Exception('写入vip表失败',10001);
+        }
+        $transaction->commit();
+        $res =   ['status'=>true,'data'=>['uid'=>$data->id,'vip_id'=>$setVip->id]];
+
+        return $res;
     }
 
     function Edit($uid,$telephone,$name,$passwd)

@@ -31,19 +31,20 @@ class AdminController extends Controller
        $passwd  =   $request->post('passwd');
        $name   =   $request->post('name');
        $uid  =   $request->post('uid');
+       $auth    =   $request->post('auth'); //1,2,3
        $handle  =   $request->post('handle');
-
+       $telephone   =   $request->post('telephone');
        try{
            //使用password_hash加密密码
            $service     =   new Adminajax();
+           $passwd  =   password_hash($passwd,PASSWORD_DEFAULT);
            switch ($handle)
            {
                case 'create':
-                   $passwd  =   password_hash($passwd,PASSWORD_DEFAULT);
-                   $result  =   $service->Create($name,$passwd);
+                   $result  =   $service->Create($name,$passwd,$telephone,$auth);
                    break;
                case 'login':
-                   $result  =   $service->Login($name,$passwd);
+                   $result  =   $service->Login($telephone,$passwd);
                    break;
                case 'edit':
                    $result  =   $service->Edit($uid,$name,$passwd);

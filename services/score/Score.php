@@ -94,7 +94,7 @@
           $scoreSet  =   $set::findOne(['cauth_iden'=>$data['cauth_iden']]);
           if(!$scoreSet)
               throw new \Exception('不存在积分设置',1);
-//          $friendLogs   =  ;
+
           $friend   = InviteFriendLogs::findOne(['uid'=>$data['uid'],'friend_uid'=>$data['inviteUid']]);
             if($friend)
                 throw new \Exception('每个用户只能邀请/被邀请一次哦',1);

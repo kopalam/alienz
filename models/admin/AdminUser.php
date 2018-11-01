@@ -34,12 +34,10 @@ class AdminUser extends \yii\db\ActiveRecord
     {
         return [
             [['passwd'], 'required'],
-            [['content'], 'string'],
             [['status'], 'integer'],
-            [['name', 'cauth_iden', 'nickname'], 'string', 'max' => 33],
+            [['name', 'cauth_iden'], 'string', 'max' => 33],
             [['telephone'], 'string', 'max' => 32],
             [['passwd'], 'string', 'max' => 132],
-            [['avatar'], 'string', 'max' => 120],
         ];
     }
 
